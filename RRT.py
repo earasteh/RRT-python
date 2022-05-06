@@ -1,3 +1,7 @@
+"""
+This code runs and tests the RRT algorithm
+"""
+
 import pygame
 from RRTbasePy import RRTGraph
 from RRTbasePy import RRTMap

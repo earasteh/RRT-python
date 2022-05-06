@@ -1,41 +1,59 @@
+"""
+This code is the class implementation of RRT algorithm
+"""
+
 import random
 import math
 import pygame
 
+
 class RRTMap:
+    """
+    Class for drawing the map, and path that is calculated
+    """
+
     def __init__(self, start, goal, MapDimensions, obsdim, obsnum):
+        """
+        :param start: start coordinates (Tuple)
+        :param goal: goal coordinates (Tuple)
+        :param MapDimensions: Dimension of the map (width and height)
+        :param obsdim: obstacles dimension
+        :param obsnum: Number of obstacles
+        """
         self.start = start
         self.goal = goal
+        self.goalFlag = False  # flag to see if the RRT tree has reached the goal
         self.MapDimensions = MapDimensions
         self.maph, self.mapw = self.MapDimensions
 
         # window setting
         self.MapWindowName = 'RRT path planning'
         pygame.display.set_caption(self.MapWindowName)
-        self.map = pygame.display.set_mode((self.mapw,self.maph))
-        self.map.fill((255,255,255))
-        self.NodeRad = 2
-        self.nodeThickness = 0
-        self.edgeThickness = 1
+        self.map = pygame.display.set_mode((self.mapw, self.maph))
+        self.map.fill((255, 255, 255))
+        self.NodeRad = 2  # radius of the nodes
+        self.nodeThickness = 0  # thickness of the nodes
+        self.edgeThickness = 1  # thickenss of the edges
 
-        self.obstacles=[]
+        self.obstacles = []
         self.obsdim = obsdim
         self.obsNumber = obsnum
 
-        #Colors
-        self.Grey = (70,70,70)
+        # Color definitions
+        self.Grey = (70, 70, 70)
         self.Blue = (0, 0, 255)
         self.Green = (0, 255, 0)
         self.Red = (255, 0, 0)
-        self.white = (255,255,255)
+        self.white = (255, 255, 255)
 
     def drawMap(self, obstacles):
-        pygame.draw.circle(self.map, self.Green, self.start, self.NodeRad+5,  0)
-        pygame.draw.circle(self.map, self.Red, self.goal, self.NodeRad+20, 1)
+        pygame.draw.circle(self.map, self.Green, self.start, self.NodeRad + 5, 0)
+        pygame.draw.circle(self.map, self.Red, self.goal, self.NodeRad + 20, 1)
         self.drawObs(obstacles)
 
     def drawPath(self):
         pass
+
     def drawObs(self, obstacles):
         obstacleList = obstacles.copy()
         while len(obstacleList) > 0:
@@ -43,10 +61,13 @@ class RRTMap:
             pygame.draw.rect(self.map, self.Grey, obstacle)
 
 
-
 class RRTGraph:
+    """
+    Main RRT algorithm class
+    """
+
     def __init__(self, start, goal, MapDimensions, obsdim, obsnum):
-        (x,y) = start
+        (x, y) = start
         self.start = start
         self.goal = goal
         self.goalFlag = False
@@ -67,7 +88,7 @@ class RRTGraph:
         self.path = []
 
     def makeRandomRect(self):
-        uppercornerx = int(random.uniform(0, self.mapw-self.obsDim))
+        uppercornerx = int(random.uniform(0, self.mapw - self.obsDim))
         uppercornery = int(random.uniform(0, self.maph - self.obsDim))
         return (uppercornerx, uppercornery)
 
@@ -111,9 +132,9 @@ class RRTGraph:
     def distance(self, n1, n2):
         (x1, y1) = (self.x[n1], self.y[n1])
         (x2, y2) = (self.x[n2], self.y[n2])
-        px = (float(x1)-float(x2))**2
-        py = (float(y1)-float(y2))**2
-        return (px+py)**(0.5)
+        px = (float(x1) - float(x2)) ** 2
+        py = (float(y1) - float(y2)) ** 2
+        return (px + py) ** (0.5)
 
     def sample_envir(self):
         x = int(random.uniform(0, self.mapw))
@@ -122,13 +143,14 @@ class RRTGraph:
 
     def nearest(self):
         pass
+
     def isFree(self):
         n = self.number_of_nodes() - 1
         (x, y) = (self.x[n], self.y[n])
         obs = self.obstacles.copy()
         while len(obs) > 0:
             rectang = obs.pop(0)
-            if rectang.collidepoint(x,y):
+            if rectang.collidepoint(x, y):
                 self.remove_node(n)
                 return False
         return True
@@ -138,9 +160,9 @@ class RRTGraph:
         while len(obs) > 0:
             rectang = obs.pop(0)
             for i in range(0, 101):
-                u = i/100
-                x = x1 * u + x2 * (1-u)
-                y = x1 * u + x2 * (1-u)
+                u = i / 100
+                x = x1 * u + x2 * (1 - u)
+                y = x1 * u + x2 * (1 - u)
                 if rectang.collidepoint(x, y):
                     return True
         return False
@@ -157,11 +179,15 @@ class RRTGraph:
 
     def step(self):
         pass
+
     def path_to_goal(self):
         pass
+
     def getPathCoords(self):
         pass
+
     def bias(self):
         pass
+
     def expand(self):
         pass
