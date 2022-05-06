@@ -14,8 +14,9 @@ https://www.youtube.com/watch?v=TzfNzqjJ2VQ
   graph TD;
       0-->1;
       0-->2;
-      0-->3;
+      1-->3;
       1-->4;
+      4-->5;
 ```
 
 <img src="https://render.githubusercontent.com/render/math?math=x = [x_0, x_1, x_2, x_3, x_4, x_5],">
