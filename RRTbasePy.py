@@ -22,7 +22,6 @@ class RRTMap:
         """
         self.start = start
         self.goal = goal
-        self.goalFlag = False  # flag to see if the RRT tree has reached the goal
         self.MapDimensions = MapDimensions
         self.maph, self.mapw = self.MapDimensions
 
@@ -47,6 +46,10 @@ class RRTMap:
         self.white = (255, 255, 255)
 
     def drawMap(self, obstacles):
+        """
+        Draws the start and goal as circle and draws the map
+        :param obstacles: obstacles list (list of pygame rect objects)
+        """
         pygame.draw.circle(self.map, self.Green, self.start, self.NodeRad + 5, 0)
         pygame.draw.circle(self.map, self.Red, self.goal, self.NodeRad + 20, 1)
         self.drawObs(obstacles)
@@ -55,6 +58,10 @@ class RRTMap:
         pass
 
     def drawObs(self, obstacles):
+        """
+        Draws the given obstacles list
+        :param obstacles: obs. list (list of pygame rect)
+        """
         obstacleList = obstacles.copy()
         while len(obstacleList) > 0:
             obstacle = obstacleList.pop(0)
@@ -70,8 +77,9 @@ class RRTGraph:
         (x, y) = start
         self.start = start
         self.goal = goal
-        self.goalFlag = False
+        self.goalFlag = False # flag to see if the RRT tree has reached the goal
         self.maph, self.mapw = MapDimensions
+        # tree data structures
         self.x = []
         self.y = []
         self.parent = []
@@ -84,15 +92,23 @@ class RRTGraph:
         self.obsDim = obsdim
         self.obsNum = obsnum
         # path
-        self.goalstate = None
-        self.path = []
+        self.goalstate = None  # flag to check whether the tree reached the goal or not
+        self.path = []  # list to hold the calculated path
 
     def makeRandomRect(self):
+        """
+        Creates upper corner position for random rectangles (used for obstacle generation)
+        :return: upper corner x, y coord.  (Tuple)
+        """
         uppercornerx = int(random.uniform(0, self.mapw - self.obsDim))
         uppercornery = int(random.uniform(0, self.maph - self.obsDim))
         return (uppercornerx, uppercornery)
 
     def makeobs(self):
+        """
+        Create obstacle and store in a list
+        :return: obstacle list (pygame rect objects)
+        """
         obs = []
 
         for i in range(0, self.obsNum):
@@ -107,23 +123,45 @@ class RRTGraph:
                     startgoalcol = False
             obs.append(rectang)
         self.obstacles = obs.copy()
+        print(obs)
         return obs
 
     def add_node(self, n, x, y):
+        """
+        adds node to the rrt graph
+        :param n: id number of the node
+        :param x: x-coord
+        :param y: y-coord
+        """
         self.x.insert(n, x)
         self.y.append(y)
 
     def remove_node(self, n):
+        """
+        removes the node from the RRT graph
+        :param n: id of the node
+        """
         self.x.pop(n)
         self.y.pop(n)
 
     def number_of_nodes(self):
+        """
+        :return: number of the nodes in the graph
+        """
         return len(self.x)
 
     def add_edge(self, parent, child):
+        """
+        addes an edge between a parent and a child
+        :param parent: used as element
+        :param child: used as index
+        """
         self.parent.insert(child, parent)
 
     def remove_edge(self, n):
+        """
+        :param n: index of the child
+        """
         self.parent.pop(n)
 
     def number_of_edge(self):
